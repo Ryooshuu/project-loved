@@ -120,9 +120,9 @@ export class Permissions<
      *     .resource("post", PostEntity);
      * ```
      */
-    resource<const Name extends string, Value>(
+    resource<Value, const Name extends string = string>(
         name: Name,
-        value: Value
+        value?: Value
     ): Permissions<
         {
             resources: Singleton["resources"] & {
@@ -133,9 +133,9 @@ export class Permissions<
     >;
     resource(
         name: string,
-        value: unknown
+        value?: unknown
     ): AnyPermissions {
-        this.singleton.resources[name] = value;
+        this.singleton.resources[name] = value ?? {};
         return this;
     }
 
