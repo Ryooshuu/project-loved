@@ -11,6 +11,8 @@
             "@loved/api": ["./api"],
             "@loved/website/*": ["./website/*"],
             "@loved/website": ["./website"],
+            "@loved/permissions/*": ["./permissions/*"],
+            "@loved/permissions": ["./permissions"],
         }
     }
 }
