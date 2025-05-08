@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "./path-alias.json",
+    "compilerOptions": {
+        "strict": true,
+        "module": "ESNext",
+        "target": "ESNext",
+        "lib": ["ES2024", "DOM", "DOM.Iterable"],
+        "moduleDetection": "force",
+        "moduleResolution": "bundler",
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "incremental": false,
+        "isolatedModules": true,
+        "noUncheckedIndexedAccess": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "noEmit": true
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true
+    },
+    "tailwindCSS.experimental.configFile": {
+        "packages/website/src/styles/index.css": ["packages/website/src/**"]
+    }
+}

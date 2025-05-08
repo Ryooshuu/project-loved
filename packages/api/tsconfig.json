@@ -1,0 +1,10 @@
+{
+    "extends": "../config-typescript/base.json",
+    "compilerOptions": {
+        "outDir": "../../built/api"
+    },
+    "include": [
+        "entry.ts",
+        "src/**/*.ts"
+    ]
+}

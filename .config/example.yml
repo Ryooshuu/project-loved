@@ -1,0 +1,27 @@
+logger:
+    level: trace
+    plugins:
+        - console
+        - file
+    file:
+        path: logs/app.log
+
+api:
+    database:
+        host: localhost
+        port: 5432
+        user: loved
+        password: loved
+        database: loved
+        ssl: false
+    port: 4000
+
+osu:
+    url: http://localhost:8080/
+#   callback: http://localhost:4000/api/osu/callback
+    client:
+        id:
+        secret:
+
+vite:
+    port: 3000

@@ -1,0 +1,10 @@
+{
+    "extends": "../config-typescript/base.json",
+    "compilerOptions": {
+        "outDir": "../../built/website",
+    },
+    "include": [
+        "./src/**/*.{ts,vue}",
+        "*.d.ts",
+    ]
+}

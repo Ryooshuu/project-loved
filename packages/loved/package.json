@@ -1,0 +1,15 @@
+{
+    "name": "loved",
+    "private": true,
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./*": "./src/**/*.ts"
+    },
+    "dependencies": {
+        "is-unicode-supported": "^2.1.0",
+        "picocolors": "^1.1.1",
+        "yaml": "^2.7.1"
+    }
+}

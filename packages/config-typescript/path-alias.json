@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "baseUrl": "../",
+        "paths": {
+            "loved/*": ["./loved/*"],
+            "loved": ["./loved"],
+            "@loved/ui/*": ["./ui/*"],
+            "@loved/ui": ["./ui"],
+            "@loved/api/*": ["./api/*"],
+            "@loved/api": ["./api"],
+            "@loved/website/*": ["./website/*"],
+            "@loved/website": ["./website"],
+        }
+    }
+}

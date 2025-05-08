@@ -1,0 +1,9 @@
+{
+    "name": "@loved/permissions",
+    "exports": {
+        ".": "./src/index.ts",
+        "./*": "./src/*.ts"
+    },
+    "private": true,
+    "type": "module"
+}
