@@ -34,6 +34,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .DS_Store
 
 bun.lock
-.config/default.yml
 .config/production.yml
+.config/development.yml
 built/

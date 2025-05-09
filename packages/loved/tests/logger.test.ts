@@ -1,5 +1,5 @@
 import { createLogger } from "loved";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("logger", () => {
     it("should create a logger", () => {

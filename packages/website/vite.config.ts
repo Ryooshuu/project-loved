@@ -1,5 +1,4 @@
 import { VueRouterAutoImports } from "unplugin-vue-router";
-import { config } from "loved";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
@@ -9,6 +8,7 @@ import vueRouter from "unplugin-vue-router/vite";
 import inspect from "vite-plugin-inspect";
 import tsconfigPaths from "vite-tsconfig-paths";
 import vueDevTools from "vite-plugin-vue-devtools";
+import { config } from "../loved/src/config"; // annoying...
 
 export default defineConfig(() => {
     return {
