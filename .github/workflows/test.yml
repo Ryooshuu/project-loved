@@ -1,4 +1,4 @@
-name: Lint checker
+name: CI Tests
 on: push
 
 jobs:

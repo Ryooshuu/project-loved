@@ -14,5 +14,6 @@ jobs:
       - run: eslint .
         working-directory: ./packages/${{ matrix.dir }}
     strategy:
+      fail-fast: false
       matrix:
         dir: [api, loved, permissions, ui, website]
