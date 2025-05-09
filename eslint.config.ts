@@ -32,7 +32,7 @@ export default defineConfig([
         rules: {
             "vue/html-indent": ["error", 4],
             "vue/script-indent": ["error", 4],
-            "vue/component-tags-order": ["error", { order: ["script", "template", "style"] }],
+            "vue/block-order": ["error", { order: ["script", "template", "style"] }],
             "vue/max-attributes-per-line": ["warn", { singleline: 3, multiline: 1 }],
             "vue/multi-word-component-names": "off",
             "vue/singleline-html-element-content-newline": "off"
