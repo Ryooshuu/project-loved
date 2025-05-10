@@ -1,9 +1,9 @@
 import Elysia from "elysia";
-import { teapotController } from "./teapot.controller";
+import { apiController } from "./api";
+import { oauthController } from "./oauth";
 
-export const apiController = new Elysia({
-    prefix: "/api"
-})
-    .use(teapotController);
+export const appController = new Elysia()
+    .use(apiController)
+    .use(oauthController);
 
-export type AppType = typeof apiController;
+export type AppType = typeof appController;

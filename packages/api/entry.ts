@@ -3,10 +3,10 @@ import swagger from "@elysiajs/swagger";
 import Elysia from "elysia";
 import colors from "picocolors";
 import { config, createLogger } from "loved";
-import { apiController } from "./src/modules";
+import { appController } from "./src/modules";
 import pkg from "../../package.json";
 
-const logger = createLogger("backend");
+export const logger = createLogger("backend");
 export const createBackendLogger = (name: string) => logger.createChild(name);
 logger.debug("Starting Elysia server...");
 
@@ -41,7 +41,7 @@ new Elysia()
         logger.error(`Error handling request.\n${err}`);
     })
 
-    .use(apiController)
+    .use(appController)
 
     .listen(port, (server) => {
         logger.info(`API listening on ${server.url}`);

@@ -1,0 +1,53 @@
+import { osuPlugin } from "@loved/api/src/plugins/osu.plugin";
+import { userRepository } from "@loved/api/src/plugins/repositories/user.plugin";
+import { sha256 } from "@oslojs/crypto/sha2";
+import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
+import Elysia, { status } from "elysia";
+
+function generateSessionToken() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    return encodeBase32LowerCaseNoPadding(bytes);
+}
+
+export const osuAuthService = new Elysia({
+    name: "service.osu.auth"
+})
+    .use(osuPlugin)
+    .use(userRepository)
+    .derive({ as: "scoped" }, ({ osu, userRepository }) => {
+        async function createUserFromCode(code: string) {
+            const client = await osu({ code: code });
+            const self = await client.getUser(client.user!);
+
+            if (await userRepository.findByUsername(self.username)) {
+                return status(409, {
+                    status: 409,
+                    message: "Username already exists."
+                });
+            }
+
+            const sessionToken = generateSessionToken();
+            const token = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
+
+            const user = await userRepository.create(
+                {
+                    username: self.username,
+                    country: self.country_code,
+                    tokens: [code],
+                    apiFetchedAt: new Date()
+                },
+                {
+                    sessionToken: token,
+                    expiresAt: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7))
+                }
+            );
+
+            return {
+                user,
+                token: sessionToken
+            };
+        }
+
+        return { createUserFromCode };
+    });

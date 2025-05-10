@@ -7,6 +7,20 @@ export abstract class BaseEntity {
     ) {}
 
     toJson(): RecursiveExcludeFunctions<this> {
-        return JSON.parse(JSON.stringify(this));
+        const seen: unknown[] = [];
+
+        return JSON.parse(JSON.stringify(this, (key, val) => {
+            if (key === "client") return;
+
+            if (val != null && typeof val === "object") {
+                if (seen.indexOf(val) >= 0) {
+                    return;
+                }
+
+                seen.push(val);
+            }
+
+            return val;
+        }));
     }
 }

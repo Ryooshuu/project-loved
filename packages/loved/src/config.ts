@@ -23,6 +23,14 @@ export type Config = {
         }
         port: number
     }
+    osu: {
+        url: string
+        callback: string
+        client: {
+            id: number
+            secret: string
+        }
+    }
     vite: {
         port: number
     }
