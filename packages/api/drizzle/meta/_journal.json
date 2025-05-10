@@ -8,6 +8,13 @@
       "when": 1746645378015,
       "tag": "0000_salty_cardiac",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1746831419575,
+      "tag": "0001_strange_machine_man",
+      "breakpoints": true
     }
   ]
 }

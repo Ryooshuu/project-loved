@@ -1,13 +1,18 @@
 import { RecursiveExcludeFunctions } from "loved";
-import { schema } from "..";
+import { db, schema } from "..";
 import { BaseEntity } from "./BaseEntity";
+import { Session, SessionEntity } from "./Session";
+import { eq } from "drizzle-orm";
 
-const sensitiveFields = ["tokens", "sessions"] as const;
+const sensitiveFields = ["tokens", "sessions", "currentSession"] as const;
 type SensitiveFields = typeof sensitiveFields[number];
 
 class UserClass extends BaseEntity {
-    constructor(obj?: object) {
-        super();
+    sessions?: SessionEntity[];
+    currentSession?: SessionEntity;
+
+    constructor(client: typeof db, obj?: object) {
+        super(client);
         Object.assign(this, obj);
     }
 
@@ -18,10 +23,18 @@ class UserClass extends BaseEntity {
         // @ts-expect-error They don't match, but that isn't a problem.
         return copy;
     }
+
+    async loadSessions() {
+        const sessions = await this.client.query.sessions.findMany({
+            where: eq(schema.sessions.userId, (this as unknown as UserEntity).id)
+        });
+
+        this.sessions = sessions.map(session => Session(this.client, session));
+    }
 }
 
 export type UserEntity = UserClass & typeof schema.users.$inferSelect;
-export function User(obj?: RecursiveExcludeFunctions<UserEntity>): UserEntity {
+export function User(client: typeof db, obj?: RecursiveExcludeFunctions<UserEntity>): UserEntity {
     // @ts-expect-error Properties don't exist in the class, but they do exist on the object.
-    return new UserClass(obj);
+    return new UserClass(client, obj);
 }
