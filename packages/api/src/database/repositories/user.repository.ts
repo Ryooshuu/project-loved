@@ -4,6 +4,7 @@ import { Session } from "../entities/Session";
 import { User } from "../entities/User";
 import { UserRepository } from "./user.interface";
 import { DatabaseError } from "../DatabaseError";
+import { Err, None, Ok, Some } from "ts-results";
 
 export class DrizzleUserRepository implements UserRepository {
     // create
@@ -11,6 +12,7 @@ export class DrizzleUserRepository implements UserRepository {
         user: typeof schema.users.$inferInsert,
         session: Omit<typeof schema.sessions.$inferInsert, "userId">
     ) {
+        // todo : use transaction, and use this class's createDbUser and createDbSession
         const [newUser] = await db.insert(schema.users)
             .values({
                 ...user
@@ -24,7 +26,7 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         if (!newUser) {
-            throw new DatabaseError("Failed to create user.");
+            return Err(new DatabaseError("Failed to create user."));
         }
 
         const [newSession] = await db.insert(schema.sessions)
@@ -35,13 +37,13 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         if (!newSession) {
-            throw new DatabaseError("Failed to create session.");
+            return Err(new DatabaseError("Failed to create session."));
         }
 
         const userEntity = User(db, newUser);
         userEntity.currentSession = Session(db, newSession);
 
-        return userEntity;
+        return Ok(userEntity);
     }
 
     async createDbUser(user: typeof schema.users.$inferInsert) {
@@ -52,10 +54,10 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         if (!newUser) {
-            throw new DatabaseError("Failed to create user.");
+            return Err(new DatabaseError("Failed to create user."));
         }
 
-        return User(db, newUser);
+        return Ok(User(db, newUser));
     }
 
     async createDbSession(session: typeof schema.sessions.$inferInsert) {
@@ -66,10 +68,10 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         if (!newSession) {
-            throw new DatabaseError("Failed to create session.");
+            return Err(new DatabaseError("Failed to create session."));
         }
 
-        return Session(db, newSession);
+        return Ok(Session(db, newSession));
     }
 
     async findById(userId: string) {
@@ -78,10 +80,10 @@ export class DrizzleUserRepository implements UserRepository {
         });
 
         if (!user) {
-            return null;
+            return None;
         }
 
-        return User(db, user);
+        return Some(User(db, user));
     }
 
     async findByUsername(username: string) {
@@ -90,10 +92,10 @@ export class DrizzleUserRepository implements UserRepository {
         });
 
         if (!user) {
-            return null;
+            return None;
         }
 
-        return User(db, user);
+        return Some(User(db, user));
     }
 
     async findSessionByToken(token: string) {
@@ -102,10 +104,10 @@ export class DrizzleUserRepository implements UserRepository {
         });
 
         if (!session) {
-            return null;
+            return None;
         }
 
-        return Session(db, session);
+        return Some(Session(db, session));
     }
 
     async findUserSessions(userId: string) {
@@ -133,10 +135,10 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         if (!updatedUser) {
-            throw new DatabaseError("Failed to update user.");
+            return Err(new DatabaseError("Failed to update user."));
         }
 
-        return User(db, updatedUser);
+        return Ok(User(db, updatedUser));
     }
 
     async updateSession(
@@ -151,35 +153,35 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         if (!updatedSession) {
-            throw new DatabaseError("Failed to update session.");
+            return Err(new DatabaseError("Failed to update session."));
         }
 
-        return Session(db, updatedSession);
+        return Ok(Session(db, updatedSession));
     }
 
     // delete
     async delete(userId: string) {
         if (!(await this.deleteUserSessions(userId))) {
-            throw new DatabaseError("Failed to delete user sessions.");
+            return Err(new DatabaseError("Failed to delete user sessions."));
         }
 
         const res = await db.delete(schema.users)
             .where(eq(schema.users.id, userId));
 
-        return (res.rowCount ?? 0) > 0;
+        return Ok((res.rowCount ?? 0) > 0);
     }
 
     async deleteSession(sessionToken: string) {
         const res = await db.delete(schema.sessions)
             .where(eq(schema.sessions.sessionToken, sessionToken));
 
-        return (res.rowCount ?? 0) > 0;
+        return Ok((res.rowCount ?? 0) > 0);
     }
 
     async deleteUserSessions(userId: string) {
         const res = await db.delete(schema.sessions)
             .where(eq(schema.sessions.userId, userId));
 
-        return (res.rowCount ?? 0) > 0;
+        return Ok((res.rowCount ?? 0) > 0);
     }
 }

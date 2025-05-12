@@ -37,6 +37,7 @@
         "loved": "workspace:*",
         "osu-api-v2-js": "^1.1.3",
         "pg": "^8.15.6",
-        "picocolors": "^1.1.1"
+        "picocolors": "^1.1.1",
+        "ts-results": "^3.3.0"
     }
 }

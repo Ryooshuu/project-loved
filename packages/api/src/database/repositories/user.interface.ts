@@ -1,4 +1,6 @@
+import { Option, Result } from "ts-results";
 import { schema } from "..";
+import { DatabaseError } from "../DatabaseError";
 import { SessionEntity } from "../entities/Session";
 import { UserEntity } from "../entities/User";
 
@@ -7,28 +9,28 @@ export interface UserRepository {
     create(
         user: typeof schema.users.$inferInsert,
         session: Omit<typeof schema.sessions.$inferInsert, "userId">
-    ): Promise<UserEntity>
-    createDbUser(user: typeof schema.users.$inferInsert): Promise<UserEntity>
-    createDbSession(session: typeof schema.sessions.$inferInsert): Promise<SessionEntity>
+    ): Promise<Result<UserEntity, DatabaseError>>
+    createDbUser(user: typeof schema.users.$inferInsert): Promise<Result<UserEntity, DatabaseError>>
+    createDbSession(session: typeof schema.sessions.$inferInsert): Promise<Result<SessionEntity, DatabaseError>>
 
     // read
-    findById(userId: string): Promise<UserEntity | null>
-    findByUsername(username: string): Promise<UserEntity | null>
-    findSessionByToken(token: string): Promise<SessionEntity | null>
+    findById(userId: string): Promise<Option<UserEntity>>
+    findByUsername(username: string): Promise<Option<UserEntity>>
+    findSessionByToken(token: string): Promise<Option<SessionEntity>>
     findUserSessions(userId: string): Promise<SessionEntity[]>
 
     // update
     update(
         userId: string,
         user: Partial<typeof schema.users.$inferInsert>
-    ): Promise<UserEntity>
+    ): Promise<Result<UserEntity, DatabaseError>>
     updateSession(
         sessionToken: string,
         session: Partial<typeof schema.sessions.$inferInsert>
-    ): Promise<SessionEntity>
+    ): Promise<Result<SessionEntity, DatabaseError>>
 
     // delete
-    delete(userId: string): Promise<boolean>
-    deleteSession(sessionToken: string): Promise<boolean>
-    deleteUserSessions(userId: string): Promise<boolean>
+    delete(userId: string): Promise<Result<boolean, DatabaseError>>
+    deleteSession(sessionToken: string): Promise<Result<boolean, DatabaseError>>
+    deleteUserSessions(userId: string): Promise<Result<boolean, DatabaseError>>
 }
