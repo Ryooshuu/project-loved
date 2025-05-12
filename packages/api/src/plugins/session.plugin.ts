@@ -38,4 +38,17 @@ export const sessionPlugin = new Elysia({
             user: session.val.user
         };
     })
+    .macro({
+        assertLoggedIn(enabled: boolean) {
+            if (!enabled)
+                return;
+
+            return {
+                async beforeHandle({ status, user }) {
+                    if (!user)
+                        return status(401, "Unauthorized.");
+                }
+            };
+        }
+    })
     .as("scoped");
