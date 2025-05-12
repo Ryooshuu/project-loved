@@ -3,7 +3,7 @@ import { config } from "loved";
 import { API as osu } from "osu-api-v2-js";
 
 export const osuPlugin = new Elysia({
-    name: "osu"
+    name: "plugin.osu"
 })
     .decorate("osu", async (user?: { code: string }) => {
         const client = await osu.createAsync(

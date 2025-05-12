@@ -17,6 +17,9 @@ class SessionClass extends BaseEntity {
             where: eq(schema.users.id, (this as unknown as SessionEntity).userId)
         });
 
+        if (!user)
+            return;
+
         this.user = User(this.client, user);
     }
 }
