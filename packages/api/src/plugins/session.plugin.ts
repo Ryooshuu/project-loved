@@ -28,7 +28,6 @@ export const sessionPlugin = new Elysia({
             return {};
 
         await session.val.loadUser();
-        console.log(session.val);
 
         if (!session.val.user)
             return {};
