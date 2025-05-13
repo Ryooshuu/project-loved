@@ -3,6 +3,7 @@ import { config } from "loved";
 import { generateAuthorizationURL } from "osu-api-v2-js";
 
 export const tokenController = new Elysia({
+    tags: ["osu"],
     prefix: "/token"
 })
     .get("/", async () => {

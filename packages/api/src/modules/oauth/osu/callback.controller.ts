@@ -2,6 +2,7 @@ import Elysia, { t } from "elysia";
 import { osuAuthService } from "./services/osuAuth.service";
 
 export const callbackController = new Elysia({
+    tags: ["osu"],
     prefix: "/callback"
 })
     .guard(
