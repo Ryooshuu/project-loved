@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1746645378015,
-      "tag": "0000_salty_cardiac",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1746831419575,
-      "tag": "0001_strange_machine_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1747153677530,
-      "tag": "0002_chunky_zaran",
+      "when": 1747176207798,
+      "tag": "0000_curvy_oracle",
       "breakpoints": true
     }
   ]

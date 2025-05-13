@@ -5,10 +5,10 @@ export function tryCatch<E = unknown, T = unknown>(fn: () => T | Promise<T>): Re
         const result = fn();
 
         if (result instanceof Promise) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const res = result as Promise<T>;
                 res.then(result => resolve(Ok(result)))
-                    .catch(err => reject(Err(err)));
+                    .catch(err => resolve(Err(err)));
             });
         }
         else {
