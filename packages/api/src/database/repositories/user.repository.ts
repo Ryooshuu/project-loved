@@ -8,7 +8,6 @@ import { Err, None, Ok, Some } from "ts-results";
 
 export class DrizzleUserRepository implements UserRepository {
     // create
-
     async createUser(user: typeof schema.users.$inferInsert) {
         const [newUser] = await db.insert(schema.users)
             .values({

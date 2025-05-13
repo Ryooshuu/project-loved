@@ -15,6 +15,13 @@
       "when": 1746831419575,
       "tag": "0001_strange_machine_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747153677530,
+      "tag": "0002_chunky_zaran",
+      "breakpoints": true
     }
   ]
 }

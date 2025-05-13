@@ -1,8 +1,9 @@
 import { RecursiveExcludeFunctions } from "loved";
-import { db, schema } from "..";
+import { db, relations, schema } from "..";
 import { BaseEntity } from "./BaseEntity";
 import { Session, SessionEntity } from "./Session";
 import { eq } from "drizzle-orm";
+import { Role } from "./Role";
 
 const sensitiveFields = ["tokens", "sessions", "currentSession"] as const;
 type SensitiveFields = typeof sensitiveFields[number];
@@ -30,6 +31,21 @@ class UserClass extends BaseEntity {
         });
 
         this.sessions = sessions.map(session => Session(this.client, session));
+    }
+
+    async getAssignedRoles() {
+        const roles = await this.client.query.usersToRoles.findMany({
+            where: eq(relations.usersToRoles.userId, (this as unknown as UserEntity).id),
+            with: {
+                role: true
+            }
+        });
+
+        if (roles.length === 0) {
+            return [];
+        }
+
+        return roles.map(role => Role(this.client, role.role));
     }
 }
 

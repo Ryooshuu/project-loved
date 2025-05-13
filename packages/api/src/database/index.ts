@@ -22,4 +22,4 @@ export const db = drizzle(pool, {
     logger
 });
 
-export { schema };
+export { schema, relations };
