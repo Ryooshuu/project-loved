@@ -1,8 +1,7 @@
 import { Elysia, t } from "elysia";
 import { userRepository } from "./repositories/user.plugin";
 import { UserEntity } from "../database/entities/User";
-import { encodeHexLowerCase } from "@oslojs/encoding";
-import { sha256 } from "@oslojs/crypto/sha2";
+import { validateSessionToken } from "../services/session.service";
 
 export const sessionPlugin = new Elysia({
     name: "plugin.session"
@@ -22,17 +21,9 @@ export const sessionPlugin = new Elysia({
         if (!token?.value)
             return {};
 
-        const tokenHash = encodeHexLowerCase(sha256(new TextEncoder().encode(token.value)));
-        const session = await userRepository.findSessionByToken(tokenHash);
+        const session = await validateSessionToken(userRepository, token.value);
         if (!session.some)
             return {};
-
-        await session.val.loadUser();
-
-        if (!session.val.user)
-            return {};
-
-        session.val.user.currentSession = session.val;
 
         return {
             user: session.val.user

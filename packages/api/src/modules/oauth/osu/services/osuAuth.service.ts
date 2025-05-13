@@ -1,16 +1,9 @@
-import { osuPlugin } from "@loved/api/src/plugins/osu.plugin";
-import { userRepository } from "@loved/api/src/plugins/repositories/user.plugin";
-import { sha256 } from "@oslojs/crypto/sha2";
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
+import { osuPlugin } from "@loved/api/plugins/osu.plugin";
+import { userRepository } from "@loved/api/plugins/repositories/user.plugin";
+import { createSession, generateSessionToken } from "@loved/api/services/session.service";
 import Elysia, { status } from "elysia";
 import { tryCatch } from "loved";
 import { Err, Ok } from "ts-results";
-
-function generateSessionToken() {
-    const bytes = new Uint8Array(16);
-    crypto.getRandomValues(bytes);
-    return encodeBase32LowerCaseNoPadding(bytes);
-}
 
 export const osuAuthService = new Elysia({
     name: "service.osu.auth"
@@ -19,21 +12,24 @@ export const osuAuthService = new Elysia({
     .use(userRepository)
     .derive({ as: "scoped" }, ({ osu, userRepository }) => {
         async function createUserFromCode(code: string) {
+            // todo : split these out into its own file
+            const invalidCodeError = status(400, {
+                status: 400,
+                message: "Invalid code."
+            });
+            const serverError = (error: unknown) => status(500, {
+                status: 500,
+                message: "Internal server error.",
+                error
+            });
+
             const client = await tryCatch(async () => await osu({ code: code }));
-            if (client.err) {
-                return Err(status(400, {
-                    status: 400,
-                    message: "Invalid code."
-                }));
-            }
+            if (client.err)
+                return Err(invalidCodeError);
 
             const self = await tryCatch(async () => await client.val.getUser(client.val.user!));
-            if (self.err) {
-                return Err(status(400, {
-                    status: 400,
-                    message: "Invalid code."
-                }));
-            }
+            if (self.err)
+                return Err(invalidCodeError);
 
             if ((await userRepository.findByUsername(self.val.username)).some) {
                 return Err(status(409, {
@@ -42,29 +38,21 @@ export const osuAuthService = new Elysia({
                 }));
             }
 
+            const user = await userRepository.createUser({
+                username: self.val.username,
+                country: self.val.country_code,
+                tokens: [code],
+                apiFetchedAt: new Date()
+            });
+            if (user.err)
+                return Err(serverError(user.val.message));
+
             const sessionToken = generateSessionToken();
-            const token = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
+            const session = await createSession(userRepository, sessionToken, user.val);
+            if (session.err)
+                return Err(serverError(session.val.message));
 
-            const user = await userRepository.create(
-                {
-                    username: self.val.username,
-                    country: self.val.country_code,
-                    tokens: [code],
-                    apiFetchedAt: new Date()
-                },
-                {
-                    sessionToken: token,
-                    expiresAt: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7))
-                }
-            );
-
-            if (user.err) {
-                return Err(status(500, {
-                    status: 500,
-                    message: "Internal server error.",
-                    error: user.val.message
-                }));
-            }
+            user.val.currentSession = session.val;
 
             return Ok({
                 user: user.val,

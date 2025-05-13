@@ -12,6 +12,16 @@ class SessionClass extends BaseEntity {
         Object.assign(this, obj);
     }
 
+    isExpired() {
+        const self = this as unknown as SessionEntity;
+        return self.expiresAt < new Date();
+    }
+
+    ValidToBeRenewed(offset: number = 0) {
+        const self = this as unknown as SessionEntity;
+        return Date.now() >= self.expiresAt.getTime() - offset;
+    }
+
     async loadUser() {
         const user = await this.client.query.users.findFirst({
             where: eq(schema.users.id, (this as unknown as SessionEntity).userId)
@@ -21,6 +31,7 @@ class SessionClass extends BaseEntity {
             return;
 
         this.user = User(this.client, user);
+        this.user.currentSession = this as unknown as SessionEntity;
     }
 }
 

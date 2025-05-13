@@ -6,12 +6,8 @@ import { UserEntity } from "../entities/User";
 
 export interface UserRepository {
     // create
-    create(
-        user: typeof schema.users.$inferInsert,
-        session: Omit<typeof schema.sessions.$inferInsert, "userId">
-    ): Promise<Result<UserEntity, DatabaseError>>
-    createDbUser(user: typeof schema.users.$inferInsert): Promise<Result<UserEntity, DatabaseError>>
-    createDbSession(session: typeof schema.sessions.$inferInsert): Promise<Result<SessionEntity, DatabaseError>>
+    createUser(user: typeof schema.users.$inferInsert): Promise<Result<UserEntity, DatabaseError>>
+    createSession(session: typeof schema.sessions.$inferInsert): Promise<Result<SessionEntity, DatabaseError>>
 
     // read
     findById(userId: string): Promise<Option<UserEntity>>

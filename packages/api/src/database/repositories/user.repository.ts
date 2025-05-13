@@ -8,45 +8,8 @@ import { Err, None, Ok, Some } from "ts-results";
 
 export class DrizzleUserRepository implements UserRepository {
     // create
-    async create(
-        user: typeof schema.users.$inferInsert,
-        session: Omit<typeof schema.sessions.$inferInsert, "userId">
-    ) {
-        // todo : use transaction, and use this class's createDbUser and createDbSession
-        const [newUser] = await db.insert(schema.users)
-            .values({
-                ...user
-            })
-            .onConflictDoUpdate({
-                target: schema.users.id,
-                set: {
-                    tokens: user.tokens
-                }
-            })
-            .returning();
 
-        if (!newUser) {
-            return Err(new DatabaseError("Failed to create user."));
-        }
-
-        const [newSession] = await db.insert(schema.sessions)
-            .values({
-                ...session,
-                userId: newUser.id
-            })
-            .returning();
-
-        if (!newSession) {
-            return Err(new DatabaseError("Failed to create session."));
-        }
-
-        const userEntity = User(db, newUser);
-        userEntity.currentSession = Session(db, newSession);
-
-        return Ok(userEntity);
-    }
-
-    async createDbUser(user: typeof schema.users.$inferInsert) {
+    async createUser(user: typeof schema.users.$inferInsert) {
         const [newUser] = await db.insert(schema.users)
             .values({
                 ...user
@@ -60,7 +23,7 @@ export class DrizzleUserRepository implements UserRepository {
         return Ok(User(db, newUser));
     }
 
-    async createDbSession(session: typeof schema.sessions.$inferInsert) {
+    async createSession(session: typeof schema.sessions.$inferInsert) {
         const [newSession] = await db.insert(schema.sessions)
             .values({
                 ...session
