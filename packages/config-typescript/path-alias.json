@@ -3,15 +3,15 @@
     "compilerOptions": {
         "baseUrl": "../",
         "paths": {
-            "loved/*": ["./loved/*"],
+            "loved/*": ["./loved/src/*"],
             "loved": ["./loved"],
-            "@loved/ui/*": ["./ui/*"],
+            "@loved/ui/*": ["./ui/src/*"],
             "@loved/ui": ["./ui"],
-            "@loved/api/*": ["./api/*"],
+            "@loved/api/*": ["./api/src/*"],
             "@loved/api": ["./api"],
-            "@loved/website/*": ["./website/*"],
+            "@loved/website/*": ["./website/src/*"],
             "@loved/website": ["./website"],
-            "@loved/permissions/*": ["./permissions/*"],
+            "@loved/permissions/*": ["./permissions/src/*"],
             "@loved/permissions": ["./permissions"],
         }
     }

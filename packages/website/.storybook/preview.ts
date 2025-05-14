@@ -1,5 +1,8 @@
 import type { Preview } from "@storybook/vue3";
 
+import "../src/styles/index.css";
+import "unfonts.css"; // what
+
 const preview: Preview = {
     parameters: {
         controls: {

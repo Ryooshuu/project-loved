@@ -1,7 +1,8 @@
 import { readFileSync } from "fs";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
 import { parse } from "yaml";
 import { LogLevel } from "./lib/Logger";
+import { fileURLToPath } from "url";
 
 export type Config = {
     logger: {
@@ -37,7 +38,10 @@ export type Config = {
 };
 
 export function resolveFromConfig(env: string, fallback: string) {
-    const dir = resolve(__dirname, "../../../.config");
+    const _filename = fileURLToPath(import.meta.url);
+    const _dirname = dirname(_filename);
+
+    const dir = resolve(_dirname, "../../../.config");
     const path = process.env[env]
         ? resolve(dir, process.env[env])
         : resolve(dir, fallback);
