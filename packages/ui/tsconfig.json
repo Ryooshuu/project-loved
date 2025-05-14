@@ -1,0 +1,9 @@
+{
+    "extends": "../config-typescript/base.json",
+    "include": [
+        "./src/**/*.{ts,vue}",
+        "*.d.ts",
+        "../website/auto-imports.d.ts",
+        "../website/typed-routed.d.ts"
+    ]
+}
