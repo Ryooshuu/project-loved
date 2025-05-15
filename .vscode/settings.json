@@ -10,6 +10,6 @@
         "**/*.code-search": true
     },
     "tailwindCSS.experimental.configFile": {
-        "packages/website/src/styles/index.css": ["packages/website/src/**"]
+        "packages/website/src/styles/index.css": ["packages/website/src/**", "packages/ui/src/**"]
     }
 }
