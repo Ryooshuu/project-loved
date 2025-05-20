@@ -21,6 +21,8 @@ function updateCanvas() {
     if (!paperCanvas.value)
         return;
 
+    const borderRadius = 5;
+
     const canvas = paperCanvas.value;
     canvas.style.width = `${sizeRef.value!.clientWidth}px`;
     const selfBounding = canvas.getBoundingClientRect();
@@ -31,7 +33,6 @@ function updateCanvas() {
     const topPath = new Paper.Path();
     const group = new Paper.CompoundPath({
         children: [topPath],
-        // selected: true,
         strokeColor: new Paper.Color(1, 1, 1, 0.5),
         strokeWidth: 2
     });
@@ -48,7 +49,7 @@ function updateCanvas() {
         new Paper.Point(topLineWidth - strikeThroughDistance / 2, topLineYPosition),
         new Paper.Point((topLineWidth + strikeThroughDistance / 2) - logoInset.top, bottomLineYPosition - logoInset.top)
     );
-    PaperRoundCorners.round(topPath.segments[1]!, 5);
+    PaperRoundCorners.round(topPath.segments[1]!, borderRadius);
     topPath.translate(new Paper.Point(-selfBounding.x, 0));
 
     const bottomPath = new Paper.Path();
@@ -66,7 +67,7 @@ function updateCanvas() {
         new Paper.Point(bottomLineXPosition, bottomLineYPosition)
     );
     bottomPath.translate(new Paper.Point(-selfBounding.x, 0));
-    PaperRoundCorners.round(bottomPath.segments[1]!, 5);
+    PaperRoundCorners.round(bottomPath.segments[1]!, borderRadius);
 
     const remainingPath = new Paper.Path();
     group.addChild(remainingPath);

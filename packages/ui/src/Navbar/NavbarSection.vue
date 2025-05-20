@@ -17,7 +17,7 @@ const { logoInset } = defineProps<{
         <NavbarHighlight :logo-inset :logo />
 
         <div class="flex flex-row items-end gap-8 pl-2">
-            <div ref="logo" class="flex flex-row gap-8">
+            <div ref="logo" class="flex flex-row gap-4">
                 <slot name="logo" />
             </div>
             <div ref="items" class="flex flex-row gap-4">
