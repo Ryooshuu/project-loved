@@ -3,10 +3,14 @@ import { routes } from "vue-router/auto-routes";
 import { IconoirProvider, Check, UserLove } from "@iconoir/vue";
 import { motion } from "motion-v";
 import { Navbar } from "@loved/ui";
+import { useTriangleBackground } from "@loved/ui/composables/useTriangleBackground";
 
 console.log(`There are ${routes.length} routes.`);
 
 const count = ref(0);
+
+const canvas = useTemplateRef("canvas");
+useTriangleBackground(canvas);
 </script>
 
 <template>
@@ -61,6 +65,13 @@ const count = ref(0);
                     </template>
                 </Navbar.Section>
             </Navbar.Root>
+
+            <div class="absolute inset-0 pointer-events-none">
+                <canvas
+                    ref="canvas"
+                    class="fixed top-0 -z-50 pointer-events-none w-screen h-screen"
+                />
+            </div>
 
             <RouterView />
             <div>Count is: {{ count }}</div>

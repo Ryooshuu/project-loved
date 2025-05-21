@@ -25,8 +25,8 @@ export abstract class LayoutBuffer<Format extends string> extends Buffer {
         this._formatStride = 0;
     }
 
-    public lockLayout(size?: number) {
-        super.lock(size ?? this._formatStride);
+    public lockLayout() {
+        super.lock(this._formatStride);
     }
 
     protected addLayout(location: number | undefined, format: Format) {

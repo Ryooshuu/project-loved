@@ -4,10 +4,6 @@ import { getUniformTypeSize } from "../utils";
 import { LayoutBuffer } from "./LayoutBuffer";
 
 export abstract class UniformBuffer extends LayoutBuffer<GPUUniformFormat> {
-    public lockLayout(): void {
-        super.lockLayout();
-    }
-
     public bind(location: number, value: ArrayLike<number>) {
         if (!Lock.isEntered(this))
             throw new Error("Cannot bind uniform buffer before it's layout has been locked.");

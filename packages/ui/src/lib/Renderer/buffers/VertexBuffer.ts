@@ -17,8 +17,9 @@ export abstract class VertexBuffer extends LayoutBuffer<GPUVertexFormat> {
         this.stride = 0;
     }
 
+    // @ts-expect-error - we're forcing the user to provide how many elements they want to add.
     public lockLayout(elements: number) {
-        super.lockLayout((this.formatStride / 4) * elements);
+        super.lock((this.formatStride / 4) * elements);
         this.elements = elements;
     }
 

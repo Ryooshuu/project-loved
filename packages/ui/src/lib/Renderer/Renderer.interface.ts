@@ -15,7 +15,7 @@ export interface RendererInterface {
     clear(color: vec4): void
     bindShader(shader: Shader): void
     bindVertexBuffer(buffer: VertexBuffer): void
-    bindUniformBuffer(binding: number, buffer: UniformBuffer): void
+    bindBuffer(binding: number, buffer: Buffer): void
 
     draw(vertexCount: number, instanceCount?: number, firstVertex?: number, firstInstance?: number): void
     drawIndexed(indexCount: number, instanceCount?: number, firstIndex?: number, baseVertex?: number, firstInstance?: number): void
@@ -27,5 +27,5 @@ export interface RendererInterface {
 
     createBuffer(type: "vertex", layout: IndexLayout): VertexBuffer
     createBuffer(type: "uniform"): UniformBuffer
-    createBuffer(): Buffer
+    createBuffer(type: "storage"): Buffer
 }

@@ -4,7 +4,8 @@ import { WebGPUUniformBuffer } from "./WebGPUUniformBuffer";
 import { WebGPUVertexBuffer } from "./WebGPUVertexBuffer";
 import { WebGPUShader } from "./WebGPUShader";
 import { Shader } from "../Shader";
-import { UniformBuffer, VertexBuffer } from "../buffers";
+import { Buffer, UniformBuffer, VertexBuffer } from "../buffers";
+import { WebGPUStorageBuffer } from "./WebGPUStorageBuffer";
 
 export class WebGPURenderer implements RendererInterface {
     public device!: GPUDevice;
@@ -14,7 +15,7 @@ export class WebGPURenderer implements RendererInterface {
     // state
     private currentShader?: WebGPUShader;
     private currentVertexBuffer?: WebGPUVertexBuffer;
-    private currentUniformBuffer?: { binding: number, buffer: WebGPUUniformBuffer };
+    private currentBoundBuffers: Map<number, Buffer> = new Map();
 
     // internal state
     private currentRenderPipeline?: GPURenderPipeline;
@@ -78,9 +79,9 @@ export class WebGPURenderer implements RendererInterface {
         this.currentVertexBuffer = buffer as WebGPUVertexBuffer;
     }
 
-    bindUniformBuffer(binding: number, buffer: UniformBuffer): void {
+    bindBuffer(binding: number, buffer: Buffer): void {
         this.drawGuard(this.commands);
-        this.currentUniformBuffer = { binding, buffer: buffer as WebGPUUniformBuffer };
+        this.currentBoundBuffers.set(binding, buffer);
     }
 
     draw(vertexCount: number, instanceCount?: number, firstVertex?: number, firstInstance?: number): void {
@@ -99,7 +100,12 @@ export class WebGPURenderer implements RendererInterface {
         this.assertBindGroup();
 
         const vertexBuffers = this.currentVertexBuffer!.update();
-        this.currentUniformBuffer?.buffer.udpate();
+        this.currentBoundBuffers.forEach((buffer) => {
+            if (buffer instanceof WebGPUUniformBuffer)
+                buffer.udpate();
+            if (buffer instanceof WebGPUStorageBuffer)
+                buffer.update();
+        });
 
         this.renderPass!.setPipeline(this.currentRenderPipeline!);
         if (this.currentBindGroup)
@@ -122,8 +128,7 @@ export class WebGPURenderer implements RendererInterface {
     }
 
     private assertRenderPipeline() {
-        // if (this.currentRenderPipeline !== undefined)
-        //     return;
+        // todo : don't recreate pipeline if nothing changed
 
         if (this.currentShader === undefined)
             throw new Error("Shader must be bound before attempting to draw.");
@@ -168,29 +173,45 @@ export class WebGPURenderer implements RendererInterface {
     }
 
     private assertBindGroup() {
-        // if (this.currentBindGroup !== undefined)
-        //     return;
-
-        if (this.currentUniformBuffer === undefined)
-            return;
-
         this.currentBindGroup = this.device.createBindGroup({
             layout: this.currentRenderPipeline!.getBindGroupLayout(0),
-            entries: [
-                { binding: 0, resource: { buffer: this.currentUniformBuffer!.buffer.udpate()! } }
-            ]
+            entries: Array.from(
+                this.currentBoundBuffers.entries()
+            ).map(
+                ([binding, buffer]) => {
+                    let internalBuffer: GPUBuffer;
+
+                    if (buffer instanceof WebGPUUniformBuffer)
+                        internalBuffer = buffer.udpate()!;
+                    else if (buffer instanceof WebGPUStorageBuffer)
+                        internalBuffer = buffer.update()!;
+                    else
+                        throw new Error("Invalid buffer type.");
+
+                    return {
+                        binding: binding,
+                        resource: { buffer: internalBuffer }
+                    };
+                }
+            )
         });
-    }
-
-    createVertexBuffer(layout: IndexLayout) {
-        return new WebGPUVertexBuffer(this, layout);
-    }
-
-    createUniformBuffer() {
-        return new WebGPUUniformBuffer(this);
     }
 
     createShader(source: string, vertexEntryPoint?: string, fragmentEntryPoint?: string) {
         return new WebGPUShader(this.device, source, vertexEntryPoint, fragmentEntryPoint);
+    }
+
+    createBuffer(type: "vertex", layout: IndexLayout): VertexBuffer;
+    createBuffer(type: "uniform"): UniformBuffer;
+    createBuffer(type: "storage"): Buffer;
+    createBuffer(type: string, ...args: Array<unknown>): Buffer {
+        if (type === "vertex")
+            return new WebGPUVertexBuffer(this, args[0] as IndexLayout);
+        else if (type === "uniform")
+            return new WebGPUUniformBuffer(this);
+        else if (type === "storage")
+            return new WebGPUStorageBuffer(this);
+
+        throw new Error(`Invalid buffer type "${type}".`);
     }
 }

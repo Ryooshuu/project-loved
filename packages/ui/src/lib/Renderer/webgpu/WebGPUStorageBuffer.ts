@@ -1,36 +1,31 @@
 import { WebGPURenderer } from ".";
-import { GPUUniformFormat, UniformBuffer } from "../buffers";
+import { Buffer } from "../buffers";
 
-export class WebGPUUniformBuffer extends UniformBuffer {
+export class WebGPUStorageBuffer extends Buffer {
     private webgpu: WebGPURenderer;
-    private layoutSize: number;
-    private buffer?: GPUBuffer;
     private isDirty: boolean = true;
+
+    private buffer?: GPUBuffer;
 
     constructor(webgpu: WebGPURenderer) {
         super();
 
         this.webgpu = webgpu;
-        this.layoutSize = 0;
     }
 
-    public bind(location: number, value: ArrayLike<number>): void {
-        super.bind(location, value);
+    public setData(offset: number, data: ArrayLike<number>) {
+        super.setData(offset, data);
         this.isDirty = true;
     }
 
-    protected addLayoutImplementation(_format: GPUUniformFormat, _location: number, stride: number) {
-        this.layoutSize += stride;
-    }
-
-    public udpate() {
+    public update() {
         if (!this.isDirty)
             return this.buffer;
 
         if (this.buffer === undefined) {
             this.buffer = this.webgpu.device.createBuffer({
-                size: this.layoutSize * 4,
-                usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+                size: this.size * 4,
+                usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
             });
         }
 

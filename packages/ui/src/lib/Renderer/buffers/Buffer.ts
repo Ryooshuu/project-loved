@@ -11,11 +11,15 @@ export abstract class Buffer {
         return this._bytes;
     }
 
+    protected get size(): number {
+        return this.bufferSize;
+    }
+
     constructor() {
         this.bufferSize = 0;
     }
 
-    protected lock(size: number) {
+    public lock(size: number) {
         Lock.enter(this);
         this.bufferSize = size;
         this._bytes = new Float32Array(size);

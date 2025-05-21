@@ -5,6 +5,7 @@ import { DummyVertexBuffer } from "./DummyVertexBuffer";
 import { DummyUniformBuffer } from "./DummyUniformBuffer";
 import { Shader } from "../Shader";
 import { DummyShader } from "./DummyShader";
+import { DummyStorageBuffer } from "./DummyStorageBuffer";
 
 export class DummyRenderer implements RendererInterface {
     async init(_canvas: HTMLCanvasElement) {}
@@ -18,27 +19,21 @@ export class DummyRenderer implements RendererInterface {
     drawIndexed(_indexCount: number, _instanceCount?: number, _firstIndex?: number, _baseVertex?: number, _firstInstance?: number): void {}
     end() {}
 
-    // createVertexBuffer(layout: IndexLayout): VertexBuffer {
-    //     return new DummyVertexBuffer(layout);
-    // }
-
-    // createUniformBuffer(): UniformBuffer {
-    //     return new DummyUniformBuffer();
-    // }
-
     createShader(source: string, vertexEntryPoint?: string, fragmentEntryPoint?: string) {
         return new DummyShader(source, vertexEntryPoint, fragmentEntryPoint);
     }
 
     createBuffer(type: "vertex", layout: IndexLayout): VertexBuffer;
     createBuffer(type: "uniform"): UniformBuffer;
-    createBuffer(): Buffer;
-    createBuffer(type?: string, ...args: Array<unknown>): Buffer {
+    createBuffer(type: "storage"): Buffer;
+    createBuffer(type: string, ...args: Array<unknown>): Buffer {
         if (type === "vertex")
             return new DummyVertexBuffer(args[0] as IndexLayout);
         else if (type === "uniform")
             return new DummyUniformBuffer();
-        else
-            return new DummyBuffer();
+        else if (type === "storage")
+            return new DummyStorageBuffer();
+
+        throw new Error(`Invalid buffer type "${type}".`);
     }
 }
