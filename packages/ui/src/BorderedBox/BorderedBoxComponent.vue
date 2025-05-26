@@ -35,10 +35,11 @@ const cssGradient = computed(() => {
     position: relative;
 }
 
-.bordered-box::before {
+.bordered-box:after {
     content: "";
     position: absolute;
     inset: 0;
+    pointer-events: none;
     border-radius: var(--radius-md);
     border: 1px solid transparent;
     background: v-bind(cssGradient);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BorderedBox } from "@loved/ui";
-
+import RulesetSelector from "./RulesetSelector.vue";
 </script>
 
 <template>
@@ -10,6 +10,6 @@ import { BorderedBox } from "@loved/ui";
         gradient-type="linear"
         class="flex flex-[1] max-w-[300px] p-5 flex-col"
     >
-        <p>Filters</p>
+        <RulesetSelector />
     </BorderedBox>
 </template>
