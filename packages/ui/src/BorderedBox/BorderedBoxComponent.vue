@@ -38,7 +38,7 @@ const cssGradient = computed(() => {
 .bordered-box:after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -1px;
     pointer-events: none;
     border-radius: var(--radius-md);
     border: 1px solid transparent;

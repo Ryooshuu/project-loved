@@ -13,7 +13,23 @@ import LovedNavbar from "./components/LovedNavbar.vue";
     >
         <div class="app font-sans flex flex-col">
             <LovedNavbar />
-            <RouterView />
+            <RouterView v-slot="{ Component }">
+                <Transition name="fade" mode="out-in">
+                    <component :is="Component" />
+                </Transition>
+            </RouterView>
         </div>
     </IconoirProvider>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
