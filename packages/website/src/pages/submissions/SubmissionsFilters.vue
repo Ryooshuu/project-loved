@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { BorderedBox } from "@loved/ui";
 import RulesetSelector from "./RulesetSelector.vue";
+import { useSubmissionsFiltersStore } from "../../stores/submissionsFiltersStore";
+import { storeToRefs } from "pinia";
+
+const filterStore = useSubmissionsFiltersStore();
+const { query } = storeToRefs(filterStore);
 </script>
 
 <template>
@@ -8,8 +13,17 @@ import RulesetSelector from "./RulesetSelector.vue";
         align="bottom"
         color="hsla(333, 46%, 70%, 16%)"
         gradient-type="linear"
-        class="flex flex-[1] max-w-[300px] p-5 flex-col"
+        class="flex flex-[1] max-w-[300px] p-5 flex-col gap-5"
     >
-        <RulesetSelector />
+        <div class="flex flex-col gap-2.5">
+            <RulesetSelector />
+            <input
+                v-model="query"
+                type="text"
+                placeholder="Search beatmaps..."
+                class="px-2 py-1 rounded-md surface-1 border-2 border-transparent focus:border-surface-2 text-sm placeholder:text-col-4 outline-none transition-all"
+            >
+            <p>{{ query }}</p>
+        </div>
     </BorderedBox>
 </template>

@@ -41,9 +41,21 @@
 }
 
 @utility border-surface-* {
-    outline-color: --value(--surface-level-*);
+    border-color: --value(--surface-level-*);
 }
 
 @utility border-surface-solid-* {
+    border-color: --value(--surface-solid-level-*);
+}
+
+@utility outline-surface-* {
+    outline-color: --value(--surface-level-*);
+}
+
+@utility outline-surface-solid-* {
     outline-color: --value(--surface-solid-level-*);
+}
+
+@utility text-col-* {
+    color: --value(--surface-level-*);
 }

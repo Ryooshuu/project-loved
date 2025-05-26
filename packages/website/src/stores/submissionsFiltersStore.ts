@@ -3,6 +3,8 @@ import { allRulesets, Ruleset } from "../lib/rulesets";
 import { RemovableRef, useStorage } from "@vueuse/core";
 
 export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () => {
+    const query = ref("");
+
     const rulesets = ref<RemovableRef<Map<number, Ruleset & { active: boolean }>>>(
         useStorage(
             "submissionsFilters.rulesets",
@@ -10,7 +12,8 @@ export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () =
                 allRulesets.map(
                     r => [
                         r.id,
-                        { ...r, active: false }
+                        // osu!standard should be active by default
+                        { ...r, active: r.id === 1 }
                     ])
             )
         )
@@ -24,6 +27,7 @@ export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () =
     }
 
     return {
+        query,
         rulesets,
         toggleRuleset
     };
