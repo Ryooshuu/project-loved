@@ -20,7 +20,7 @@ const isCurrent = computed(() => {
             id="navbar-item"
             layout
             layout-id="navbar-item"
-            class="absolute left-0 right-0 -bottom-[8px] h-1 bg-white rounded-full glow"
+            class="absolute left-0 right-0 -bottom-[10px] h-1 bg-white rounded-full glow"
             :transition="{
                 type: 'spring',
                 visualDuration: 0.3,

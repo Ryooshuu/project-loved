@@ -33,5 +33,5 @@ const scroll = useScroll(window);
         <slot />
     </div>
     <!-- Added for spacing -->
-    <div class="h-10" />
+    <div class="h-20" />
 </template>
