@@ -20,6 +20,10 @@
     --surface-solid-level-6: #d58eae;
 }
 
+@utility surface-bg {
+    background-color: var(--bg-surface);
+}
+
 @utility surface-* {
     background-color: --value(--surface-level-*);
 }

@@ -17,7 +17,7 @@ export default defineConfig(() => {
         },
         plugins: [
             vueRouter({
-                extensions: [".page.vue", ".vue"],
+                extensions: [".page.vue"],
                 importMode: "async",
                 routesFolder: [
                     {

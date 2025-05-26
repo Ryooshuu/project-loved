@@ -6,7 +6,7 @@ const scroll = useScroll(window);
 </script>
 
 <template>
-    <div class="fixed inset-0 z-10 flex flex-row gap-12 items-center h-20 p-2">
+    <div class="fixed inset-0 flex flex-row gap-12 items-center h-20 p-2">
         <motion.div
             :animate="{
                 opacity: scroll.arrivedState.top ? 1 : 0,
@@ -19,6 +19,8 @@ const scroll = useScroll(window);
             }"
             class="pointer-events-none absolute inset-0 h-[50vh] -z-50 bg-linear-to-b from-[#FF338F0F] to-[#FF338F00]"
         />
+    </div>
+    <div class="fixed inset-0 z-10 flex flex-row gap-12 items-center h-20 p-2">
         <motion.div
             :animate="{
                 opacity: scroll.arrivedState.top ? 0 : 1,
@@ -33,5 +35,5 @@ const scroll = useScroll(window);
         <slot />
     </div>
     <!-- Added for spacing -->
-    <div class="h-20" />
+    <div class="min-h-20 max-h-20 h-full flex" />
 </template>
