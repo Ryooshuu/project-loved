@@ -45,7 +45,7 @@ function updateCanvas() {
     const strikeThroughDistance = bottomLineYPosition - topLineYPosition;
 
     topPath.add(
-        new Paper.Point(0, topLineYPosition),
+        new Paper.Point(-20, topLineYPosition),
         new Paper.Point(topLineWidth - strikeThroughDistance / 2, topLineYPosition),
         new Paper.Point((topLineWidth + strikeThroughDistance / 2) - logoInset.top, bottomLineYPosition - logoInset.top)
     );
@@ -58,8 +58,8 @@ function updateCanvas() {
     const lightBar = document.getElementById("navbar-item") as HTMLSpanElement;
     const lightBarBounding = lightBar.getBoundingClientRect();
     let bottomLineXPosition = lightBarBounding.left - 4;
-    if (bottomLineXPosition < (topLineWidth + strikeThroughDistance / 2)) {
-        bottomLineXPosition = (topLineWidth + strikeThroughDistance / 2);
+    if (bottomLineXPosition < (topLineWidth + strikeThroughDistance / 2) + 10) {
+        bottomLineXPosition = (topLineWidth + strikeThroughDistance / 2) + 10;
     }
     bottomPath.add(
         new Paper.Point((topLineWidth + strikeThroughDistance / 2) - logoInset.bottom, bottomLineYPosition - logoInset.bottom),
@@ -74,8 +74,8 @@ function updateCanvas() {
     remainingPath.strokeColor = new Paper.Color(1, 0, 0, 0.5);
     let remainingPathXPosition = lightBarBounding.left + lightBarBounding.width + 4;
 
-    if (remainingPathXPosition < (topLineWidth + strikeThroughDistance / 2)) {
-        remainingPathXPosition = (topLineWidth + strikeThroughDistance / 2);
+    if (remainingPathXPosition < (topLineWidth + strikeThroughDistance / 2) + 10) {
+        remainingPathXPosition = (topLineWidth + strikeThroughDistance / 2) + 10;
     }
 
     remainingPath.add(
