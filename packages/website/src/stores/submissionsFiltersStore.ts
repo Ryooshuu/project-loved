@@ -4,6 +4,12 @@ import { RemovableRef, useStorage } from "@vueuse/core";
 
 export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () => {
     const query = ref("");
+    const status = ref<RemovableRef<("pending" | "loved" | "ranked" | "graveyard")[]>>(
+        useStorage(
+            "submissionsFilters.status",
+            ["pending", "graveyard"]
+        )
+    );
 
     const rulesets = ref<RemovableRef<Map<number, Ruleset & { active: boolean }>>>(
         useStorage(
@@ -28,6 +34,7 @@ export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () =
 
     return {
         query,
+        status,
         rulesets,
         toggleRuleset
     };

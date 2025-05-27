@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { TaggedComboBox } from "@loved/ui";
+import { useSubmissionsFiltersStore } from "../../stores/submissionsFiltersStore";
+import { storeToRefs } from "pinia";
 
 const options = [
     { name: "Pending", color: 45 },
@@ -8,7 +10,15 @@ const options = [
     { name: "Graveyard", color: undefined }
 ];
 
-const values = ref<(typeof options[number])[]>([options[0]!]);
+const filterStore = useSubmissionsFiltersStore();
+const { status } = storeToRefs(filterStore);
+const values = ref<(typeof options[number])[]>(
+    status.value.map(s => options.find(o => o.name.toLowerCase() === s)!)
+);
+
+watch(values, () => {
+    status.value = values.value.map(v => v.name.toLowerCase()) as typeof status.value;
+});
 </script>
 
 <template>
