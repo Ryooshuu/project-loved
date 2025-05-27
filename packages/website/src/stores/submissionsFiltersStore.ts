@@ -11,6 +11,8 @@ export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () =
         )
     );
 
+    const reviewStatus = ref<RemovableRef<("reviewed" | "not reviewed" | "positive" | "neutral" | "negative")[]>>(useStorage("submissionsFilters.reviewStatus", []));
+
     const rulesets = ref<RemovableRef<Map<number, Ruleset & { active: boolean }>>>(
         useStorage(
             "submissionsFilters.rulesets",
@@ -35,6 +37,7 @@ export const useSubmissionsFiltersStore = defineStore("submissionsFilters", () =
     return {
         query,
         status,
+        reviewStatus,
         rulesets,
         toggleRuleset
     };
