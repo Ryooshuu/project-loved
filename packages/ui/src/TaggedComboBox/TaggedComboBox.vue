@@ -9,27 +9,25 @@ const { contains } = useFilter({ sensitivity: "base" });
 const {
     options,
     label,
-    defaultValues = [],
     getOptionKey = v => v as string,
     getOptionStyle = undefined
 } = defineProps<{
     options: T[]
     label: string
-    defaultValues?: T[]
     getOptionKey?: (value: T) => string
     getOptionStyle?: (value: T) => unknown
 }>();
 
-const values = ref<T[]>(defaultValues);
+const model = defineModel<T[]>();
 const query = ref("");
 
 const dropdownOpen = ref(false);
 
 const filteredOptions = computed(
-    () => options.filter(o => contains(getOptionKey(o), query.value) && !values.value.map(v => getOptionKey(v as T)).includes(getOptionKey(o)))
+    () => options.filter(o => contains(getOptionKey(o), query.value) && !model.value?.map(v => getOptionKey(v as T)).includes(getOptionKey(o)))
 );
 
-watch(values, () => {
+watch(model, () => {
     query.value = "";
 }, { deep: true });
 </script>
@@ -38,7 +36,7 @@ watch(values, () => {
     <div class="flex flex-col gap-1">
         <p class="text-col-5">{{ label }}</p>
         <Combobox.Root
-            v-model="values"
+            v-model="model"
             v-model:open="dropdownOpen"
             multiple
             ignore-filter
@@ -46,13 +44,13 @@ watch(values, () => {
         >
             <Combobox.Anchor class="w-full flex p-1 surface-solid-1 rounded-md">
                 <TagsInput.Root
-                    v-model="values"
+                    v-model="model"
                     delimiter=""
                     :display-value="v => getOptionKey(v as T)"
                     class="flex gap-2 flex-wrap w-full"
                 >
                     <TagsInput.Item
-                        v-for="(item, idx) in values"
+                        v-for="(item, idx) in model"
                         :key="idx"
                         :value="item"
                         class="flex gap-1 rounded-md px-1.5 text-col-6 surface-solid-3 border-2 border-transparent transition-colors aria-[current=true]:border-surface-4 font-semibold"
