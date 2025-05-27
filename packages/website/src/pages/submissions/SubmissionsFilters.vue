@@ -3,6 +3,7 @@ import { BorderedBox } from "@loved/ui";
 import RulesetSelector from "./RulesetSelector.vue";
 import { useSubmissionsFiltersStore } from "../../stores/submissionsFiltersStore";
 import { storeToRefs } from "pinia";
+import BeatmapStatusPicker from "./BeatmapStatusPicker.vue";
 
 const filterStore = useSubmissionsFiltersStore();
 const { query } = storeToRefs(filterStore);
@@ -23,7 +24,10 @@ const { query } = storeToRefs(filterStore);
                 placeholder="Search beatmaps..."
                 class="px-2 py-1 rounded-md surface-1 border-2 border-transparent focus:border-surface-2 text-sm placeholder:text-col-4 outline-none transition-all"
             >
-            <p>{{ query }}</p>
+        </div>
+        <div class="flex flex-col gap-2.5">
+            <p>Filters</p>
+            <BeatmapStatusPicker />
         </div>
     </BorderedBox>
 </template>
