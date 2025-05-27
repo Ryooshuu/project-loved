@@ -12,14 +12,16 @@ const values = ref<(typeof options[number])[]>([options[0]!]);
 </script>
 
 <template>
-    <TaggedComboBox
-        v-model="values"
-        label="Beatmap status"
-        :options="options"
-        :get-option-key="v => v.name"
-        :get-option-style="v => v.color ? {
-            'background-color': `hsl(${v.color}, 100%, 70%)`,
-            'color': `hsl(${v.color}, 100%, 10%)`
-        } : {}"
-    />
+    <div class="flex flex-col gap-0.5">
+        <p class="text-col-5">Beatmap status</p>
+        <TaggedComboBox
+            v-model="values"
+            :options="options"
+            :get-option-key="v => v.name"
+            :get-option-style="v => v.color ? {
+                'background-color': `hsl(${v.color}, 100%, 70%)`,
+                'color': `hsl(${v.color}, 100%, 10%)`
+            } : {}"
+        />
+    </div>
 </template>
